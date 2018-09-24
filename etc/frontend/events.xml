@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="customer_register_success">
-        <observer name="persistent" instance="Techspot\DocumentUpload\Observer\RedirectCustomer" />
-    </event>
     <event name="customer_login">
         <observer name="docupload_customer_login_success" instance="Techspot\DocumentUpload\Observer\RedirectCustomer" />
     </event>
