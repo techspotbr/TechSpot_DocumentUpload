@@ -1,0 +1,39 @@
+<?php
+    $block = $this;
+    $documentsCollection = $block->getCustomerDocuments();
+?>
+<div class="fieldset-wrapper-title">
+    <strong class="title">
+        <span data-bind="i18n: label"><?= __('Documents of Customer'); ?></span>
+    </strong>
+</div>
+
+<div>
+<?php if($documentsCollection->getSize() > 0) : ?>
+    <p><?= __('This client sent the following documents:'); ?>
+    <table class="data-grid">
+        <?php foreach($documentsCollection as $doc): ?>
+        <thead>
+            <tr>
+                <th class="data-grid-th _sortable not-sort  col-document_image"><?= __('Image'); ?></th>
+                <th class="data-grid-th _sortable not-sort  col-document_file"><?= __('Document'); ?></th>
+                <th class="data-grid-th _sortable not-sort  col-document_createdAt"><?= __('Created At'); ?></th>
+                <th class="data-grid-th _sortable not-sort  col-document_updatedAt"><?= __('Updated At'); ?></th>
+            </tr>
+        <thead>
+        <tbody>
+            <?php for($i=1; $i<=6; $i++) {?>
+                <?php if($doc->getData('document'.$i.'_file')):?>
+                <tr>
+                    <td><img src="<?= $block->getThumbnailUrl($doc->getData('document'.$i.'_file')); ?>"/></td>
+                    <td><span><span class="icon-attach" aria-hidden="true"></span><a href=""><?= $doc->getData('document'.$i.'_type'); ?></a></span>
+                    <td><?= __('Created At')?> <?= $doc->getData('created_at')?> </td>
+                    <td><?= __('Updated At')?> <?= $doc->getData('updated_at')?> </td>
+                </tr>
+                <?php endif; ?>
+            <?php } ?>
+            <?php endforeach; ?>
+        <tbody>    
+    </table>
+<?php endif; ?>
+</div>

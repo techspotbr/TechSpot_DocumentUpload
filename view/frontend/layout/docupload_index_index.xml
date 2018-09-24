@@ -21,9 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-	<head>
-        <title>Document Upload</title>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<update handle="customer_account"/>
+    <head>
+        <title>My Documents</title>
     </head>
     <body>
         <referenceContainer name="content">

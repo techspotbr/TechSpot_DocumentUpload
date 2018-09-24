@@ -15,6 +15,7 @@ use Magento\Framework\Filesystem;
 
 class Post extends \Magento\Framework\App\Action\Action
 {
+    const REDIRECT_PAGE_DOC = 'docupload/index/index';
     const REDIRECT_PAGE_PF = 'docupload/index/docpf';
     const REDIRECT_PAGE_PJ = 'docupload/index/docpj';
 
@@ -54,7 +55,7 @@ class Post extends \Magento\Framework\App\Action\Action
         }
 
         $files = $this->getRequest()->getFiles();
-        $pathurl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'customer/docupload/';
+        $pathurl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'docupload/';
         $mediaDir = $this->_filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath();
         $mediapath = $this->_mediaBaseDirectory = rtrim($mediaDir, '/');
         
@@ -62,7 +63,7 @@ class Post extends \Magento\Framework\App\Action\Action
         
         $model->setData('customer_id', $this->customerSession->getId());
 
-        $row  = $model->load(1);
+        $row  = $model->load($this->customerSession->getId(), 'customer_id');
         $createNew = false;
         if (!$row->getId()) {
             $createNew = true;
@@ -78,7 +79,7 @@ class Post extends \Magento\Framework\App\Action\Action
                 $uploader = $this->_fileUploaderFactory->create(['fileId' => 'document'.$i.'_file']);
                 $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png', 'pdf']);
                 $uploader->setAllowRenameFiles(true);
-                $path = $mediapath . '/customer/docupload/';
+                $path = $mediapath . '/docupload/';
                 $result = $uploader->save($path);
 
                 // Save Data
@@ -114,12 +115,7 @@ class Post extends \Magento\Framework\App\Action\Action
      */
     public function getRedirectPage($customerType)
     {
-        $redirectPage = false;
-        if($customerType === '1'){
-            $redirectPage = self::REDIRECT_PAGE_PF;
-        } else if($customerType === '2'){
-            $redirectPage = self::REDIRECT_PAGE_PJ;
-        }
+        $redirectPage = self::REDIRECT_PAGE_DOC;
         return $this->_redirect($redirectPage);
     }
 }
