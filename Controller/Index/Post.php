@@ -16,20 +16,23 @@ use Magento\Framework\Filesystem;
 class Post extends \Magento\Framework\App\Action\Action
 {
     const REDIRECT_PAGE_PF = 'docupload/index/docpf';
-    const REDIRECT_PAGE_PJ = 'docupload/index/docpJ';
+    const REDIRECT_PAGE_PJ = 'docupload/index/docpj';
 
+    protected $customerSession;
     protected $_objectManager;
     protected $_storeManager;
     protected $_filesystem;
     protected $_fileUploaderFactory;
     
     public function __construct(
+        \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\App\Action\Context $context, 
         \Magento\Framework\ObjectManagerInterface $objectManager, 
         StoreManagerInterface $storeManager,
         \Magento\Framework\Filesystem $filesystem,
         \Magento\MediaStorage\Model\File\UploaderFactory $fileUploaderFactory) 
     {
+        $this->customerSession = $customerSession;
         $this->_objectManager = $objectManager;
         $this->_storeManager = $storeManager;
         $this->_filesystem = $filesystem;
@@ -57,7 +60,7 @@ class Post extends \Magento\Framework\App\Action\Action
         
         $model = $this->_objectManager->create('Techspot\DocumentUpload\Model\Documents');
         
-        $model->setData('customer_id', 1);
+        $model->setData('customer_id', $this->customerSession->getId());
 
         $row  = $model->load(1);
         $createNew = false;
