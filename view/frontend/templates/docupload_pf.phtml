@@ -1,0 +1,87 @@
+<div class="docupload-page-description">
+<?php echo $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('docupload-page-description')
+            ->toHtml(); ?>
+</div>
+<form class="form form-docupload" method="POST" enctype="multipart/form-data" action="<?php echo $this->getUrl('docupload/index/post'); ?>" data-hasrequired="<?php echo __('* Required Fields') ?>" data-mage-init='{"validation":{}}'>
+<input type="hidden" name="customer_type" id="customer_type" value="1"/>
+<fieldset class="fieldset">
+    <legend class="legend"><span><?= __('Personal Documents')?></span></legend>
+    <div class="field document1_file required">
+        <label class="label" for="name"><span><?php echo __('RG:') ?></span></label>
+        <div class="control">
+            <input type="hidden" name="document1_type" value="<?= __('RG') ?>"/>
+            <input name="document1_file" id="document1_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    <div class="field document2_type">
+        <label class="label" for="enquiry"><span><?php echo __('CPF or Drive License:') ?></span></label>
+        <div class="control">
+            <select name="document2_type" id="document2_type">
+                <option value="" selected><?= __('Select the document type'); ?></option>
+                <option value="<?= __('CPF'); ?>"><?= __('CPF'); ?></option>
+                <option value="<?= __('Driver License'); ?>"><?= __('Driver License'); ?></option>
+            </select>
+            <input name="document2_file" id="document2_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    <div class="field document3_file required">
+        <label class="label" for="name"><span><?php echo __('Proof of address:') ?></span></label>
+        <div class="control">
+            <input type="hidden" name="document3_type" value="<?= __('Proof of address') ?>"/>
+            <input name="document3_file" id="document3_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <input type="checkbox" class="checkbox-married" id="married" name="married" value=""> <?= __('Check if married')?>
+        </div>
+    </div>
+</fieldset>
+<fieldset class="fieldset married-fields" style="display:none;">
+    <legend class="legend"><span><?= __('Partner Documents')?></span></legend>
+   
+    <div class="field document4_file required">
+        <label class="label" for="name"><span><?php echo __('Partner document:') ?></span></label>
+        <div class="control">
+            <input type="hidden" name="document4_type" value="<?= __('Partner document') ?>"/>
+            <input name="document4_file" id="document4_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    <div class="field document5_type">
+        <label class="label" for="enquiry"><span><?php echo __('Partner Taxvat or Driver License:') ?></span></label>
+        <div class="control">
+            <select name="document5_type" id="document5_type">
+                <option value="" selected><?= __('Select the document type'); ?></option>
+                <option value="<?= __('Partner Taxvat'); ?>"><?= __('Partner Taxvat'); ?></option>
+                <option value="<?= __('Partner Driver License'); ?>"><?= __('Partner Drive License'); ?></option>
+            </select>
+            <input name="document5_file" id="document5_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    <div class="field document6_file required">
+        <label class="label" for="name"><span><?php echo __('Wedding certificate:') ?></span></label>
+        <div class="control">
+            <input type="hidden" name="document6_type" value="<?= __('Wedding certificate') ?>"/>
+            <input name="document6_file" id="document6_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" title="<?php echo __('Send Files') ?>" class="action submit primary">
+                <span><?php echo __('Send Files') ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+require([
+    'jquery',
+    'docupload',
+    'docuploadPf',
+    'domReady!'
+], function($){
+});
+</script>
