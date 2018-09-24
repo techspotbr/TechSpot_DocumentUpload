@@ -1,0 +1,26 @@
+<?php
+    $block = $this;
+    $documentsCollection = $block->getMyDocuments();
+?>
+<div>
+<?php if($documentsCollection->getSize() > 0) : ?>
+    <p><?= __('You have already uploaded the files below:'); ?>
+    <table>
+        <?php foreach($documentsCollection as $doc): ?>
+
+        <?php for($i=1; $i<=6; $i++) {?>
+            <?php if($doc->getData('document'.$i.'_file')):?>
+            <tr>
+                <td><img src="<?= $block->getThumbnailUrl($doc->getData('document'.$i.'_file')); ?>"/></td>
+                <td><span><span class="icon-attach" aria-hidden="true"></span><a href=""><?= $doc->getData('document'.$i.'_type'); ?></a></span>
+                <td><?= __('Created At')?> <?= $doc->getData('created_at')?> </td>
+            </tr>
+            <?php endif; ?>
+        <?php } ?>
+        
+        <?php endforeach; ?>
+    </table>
+<?php else : ?>
+    <p><a href="<?= $block->getDocuploadPageLink(); ?>"><?= __('You do not have any documents yet. Click here to upload the documents.') ?></a></p>
+<?php endif; ?>
+</div>
