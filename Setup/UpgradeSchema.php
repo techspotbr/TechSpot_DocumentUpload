@@ -34,8 +34,99 @@ class UpgradeSchema implements UpgradeSchemaInterface
      */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        $setup->startSetup();
+
+        if (version_compare($context->getVersion(), "1.0.1", "<")) {
+            $this->upgradeVersionOneZeroOne($setup);
+        }
         
+        if (version_compare($context->getVersion(), "1.0.2", "<")) {
+            $this->upgradeVersionOneZeroTwo($setup);
+        }
+    }
+
+    
+    /**
+     * @param CustomerSetup $customerSetup
+     * @return void
+     */
+    private function upgradeVersionOneZeroOne($setup)
+    {
+
+    }
+
+    /**
+     * @param CustomerSetup $customerSetup
+     * @return void
+     */
+    private function upgradeVersionOneZeroTwo($setup)
+    {
+        $installer = $setup;
+        $installer->startSetup();
+
+        $table = $installer->getConnection()->newTable(
+            $installer->getTable('customer_certificate')
+        )->addColumn(
+            'entity_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            array('identity' => true, 'nullable' => false, 'primary' => true),
+            'Document ID'
+        )->addColumn(
+            'customer_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true, 'nullable' => false, 'default' => '0'],
+            'Customer ID'
+        )->addColumn(
+            'certificate_type',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            255,
+            array('nullable' => false),
+            'Certificate Type'
+        )->addColumn(
+            'certificate_file',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            255,
+            array('nullable' => false),
+            'Certificate File'
+        )->addColumn(
+            'certificate_pin',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            255,
+            array('nullable' => false),
+            'Certificate Pin'
+        )->addColumn(
+            'created_at',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+            null,
+            array(),
+            'Creation Time'
+        )->addColumn(
+            'update_time',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+            null,
+            array(),
+            'Modification Time'
+        )->addIndex(
+            $installer->getIdxName(
+                'customer_certificate',
+                'customer_id',
+                \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
+            ),
+            'customer_id',
+            ['type' => \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE]
+        )->addForeignKey(
+            $installer->getFkName('customer_certificate', 'customer_id', 'customer_entity', 'entity_id'),
+            'customer_id',
+            $installer->getTable('customer_entity'),
+            'entity_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        )->setComment(
+            'Customer Certificate Table'
+        );
+        $installer->getConnection()->createTable($table);
+
         $setup->endSetup();
+
     }
 }

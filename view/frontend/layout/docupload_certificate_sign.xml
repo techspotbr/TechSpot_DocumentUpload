@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <!--
 /**
  * The Tech Spot DocumentUpload Module for Magento 2 enable upload documents to customer account (In Brazil for PF- Individuals and PJ- Legal Entity. 
@@ -21,6 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-	<module name="Techspot_DocumentUpload" setup_version="1.0.2" schema_version="1.0.2"/>
-</config>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<update handle="customer_account"/>
+    <head>
+        <title>My Digital Certificate</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Techspot\DocumentUpload\Block\Contract" name="contract" template="Techspot_DocumentUpload::certificate.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

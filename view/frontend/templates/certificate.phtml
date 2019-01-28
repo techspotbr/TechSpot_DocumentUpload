@@ -1,0 +1,53 @@
+<?php
+    $block = $this;
+?>
+<div class="docupload-page-description">
+<?php echo $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('docupload-page-certificate-description')
+            ->toHtml(); ?>
+</div>
+<?php if($block->hasValidCertificate()): ?>
+<?php $digitalCertificate = $block->getCustomerCertificate(); ?>
+<h3><?= __('You already have a registered digital certificate.') ?></h3>
+<table>
+    <tr>
+        <th><?= __('Digital Certificate Type: ')?></th>
+        <td><?= $digitalCertificate->getCertificateType(); ?></td>
+    </tr>
+    <tr>
+        <th><?= __('Digital Certificate File: ')?></th>
+        <td><?= $digitalCertificate->getCertificateFile(); ?></td>
+    </tr>
+    <tr>
+        <th><?= __('Created At: ')?></th>
+        <td><?= $digitalCertificate->getCreatedAt(); ?></td>
+    </tr>
+</table>
+<?php else: ?>
+<form class="form form-docupload" method="POST" enctype="multipart/form-data" action="<?php echo $this->getUrl('docupload/certificate/post'); ?>" data-hasrequired="<?php echo __('* Required Fields') ?>" data-mage-init='{"validation":{}}'>
+<input type="hidden" name="customer_type" id="customer_type" value="1"/>
+<fieldset class="fieldset">
+    <legend class="legend"><span><?= __('Upload do Certificado')?></span></legend>
+    <div class="field certificate_file required">
+        <label class="label" for="name"><span><?php echo __('Certificate A1:') ?></span></label>
+        <div class="control">
+            <input name="certificate_file" id="certificate_file" value="" class="input-text" type="file" data-validate="{required:true}"/>
+        </div>
+    </div>
+    <div class="field certificate_pin required">
+        <label class="label" for="name"><span><?php echo __('Certificate PIN:') ?></span></label>
+        <div class="control">
+            <input name="certificate_pin" id="certificate_pin" value="" class="input-text" type="password" data-validate="{required:true}"/>
+        </div>
+    </div>
+</fieldset>
+<div class="actions-toolbar">
+    <div class="primary">
+        <button type="submit" title="<?php echo __('Send File') ?>" class="action submit primary">
+            <span><?php echo __('Send File') ?></span>
+        </button>
+    </div>
+</div>    
+</form>
+<?php endif; ?>
