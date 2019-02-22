@@ -15,9 +15,29 @@ use Magento\Framework\App\ObjectManager;
  */
 class Contract extends \Magento\Cms\Block\Block
 {
+    const CONTRACT_CMS_BLOCK_IDENTIFIER = 'contrato-participacao-leilao';
+
+    /**
+     * @var \Magento\Customer\Model\Session
+     **/
     protected $customerSession;
 
-    protected $countryFactory;
+    /**
+     * @var \Techspot\DocumentUpload\Model\Template\Filter
+     */
+    protected $_filter;
+
+  
+    
+    /**
+     * Get Store ID
+     *
+     * @return int
+     */
+    public function getStoreId()
+    {
+        return $this->_storeManager->getStore()->getId();
+    }
 
     /**
      * Get logo image URL
@@ -30,6 +50,11 @@ class Contract extends \Magento\Cms\Block\Block
         return $logo->getLogoSrc();
     }
 
+    /**
+     * Return the Customer Default Data or false
+     * 
+     * @return object|false
+     **/
     protected function getDefaultData()
     {
         if (!isset($this->customerSession)) {
@@ -46,14 +71,18 @@ class Contract extends \Magento\Cms\Block\Block
                 
                 $customerLegalType = $customer->getData('legal_type');
                 
-                if($customerLegalType == 1){
-                    $this->setData('customer_legal_type_code', 'CPF');
-                    $this->setData('customer_rg', $customer->getData('document'));
-                    $this->setData('customer_rg_emissor', $customer->getData('document_emitter'));
-                } else if($customerLegalType === '2'){
-                    $this->setData('customer_legal_type_code', 'CNPJ');
-                    $this->setData('customer_state_inscription', $customer->getData('state_inscription'));
-                    $this->setData('customer_county_inscription', $customer->getData('county_inscription'));
+                if(null !== $customerLegalType || null !== $customer->getData('taxvat')){
+                    if($customerLegalType == \Techspot\Brcustomer\Model\Config\Source\Legaltype::LEGAL_TYPE_PHYSICAL_PERSON){
+                        $this->setData('customer_legal_type_code', 'CPF');
+                        $this->setData('customer_rg', $customer->getData('document'));
+                        $this->setData('customer_rg_emissor', $customer->getData('document_emitter'));
+                    } else if($customerLegalType === \Techspot\Brcustomer\Model\Config\Source\Legaltype::LEGAL_TYPE_LEGAL_PERSON){
+                        $this->setData('customer_legal_type_code', 'CNPJ');
+                        $this->setData('customer_state_inscription', $customer->getData('state_inscription'));
+                        $this->setData('customer_county_inscription', $customer->getData('county_inscription'));
+                    }
+                } else {
+                    return false;
                 }
 
                 $this->setData('customer_taxvat', $customer->getTaxvat());
@@ -70,37 +99,32 @@ class Contract extends \Magento\Cms\Block\Block
 
                 return $this->getData();
             }
+            return false;
         }
         return false;
     }
 
+    /**
+     * Return the cms Block content 
+     * 
+     * @return string
+     **/
     protected function getBlockContent()
     {
-        //$blockId = $this->getBlockId();
-        $blockId = 'contrato-participacao-leilao';
+        $blockId = self::CONTRACT_CMS_BLOCK_IDENTIFIER;
         $html = '';
         if ($blockId) {
-            $storeId = $this->_storeManager->getStore()->getId();
             $block = $this->_blockFactory->create();
-            $block->setStoreId($storeId)->load($blockId);
+            $block->setStoreId($this->getStoreId())->load($blockId);
             if ($block->isActive()) {
                 if (!isset($this->_filter)) {
                     $this->_filter = ObjectManager::getInstance()->get('\Techspot\DocumentUpload\Model\Template\Filter');
                 }
                 
-                $defaultData = $this->getDefaultData();
-                if($defaultData){
-                    $this->_filter->initDefaultFilters();
-                    $this->_filter->setVariables($this->getDefaultData());
-                    
-                    $html = $this->_filter->setStoreId($storeId)->filter($block->getContent());
-                    
-                } else {
-                    $addressNotFound = "<p>".__("To view/print the Contract Participation in Judicial Auction, Extrajudicial Auction and/or Direct Online Sale, it is necessary to register your legal address.")."</p>";
-                    $addressNotFound.= "<h3>".__("<a href='%1'> Click here </a> to register your address.", $this->getUrl('customer/address/new'))."</h3>";
-                    $addressNotFound.= "<p>".__("Then click on the CONTRACT link in the side menu to view and print your contract.")."</p>";
-                    $html = $this->_filter->setStoreId($storeId)->filter($addressNotFound);
-                }
+                $this->_filter->initDefaultFilters();
+                $this->_filter->setVariables($this->getDefaultData());
+                
+                $html = $this->_filter->setStoreId($this->getStoreId())->filter($block->getContent());
             }
         }
         return $html;
@@ -108,6 +132,7 @@ class Contract extends \Magento\Cms\Block\Block
 
     /**
      * Prepare Content to PDF
+     * 
      * @return string
      */
     public function _toPdf()
@@ -122,21 +147,22 @@ class Contract extends \Magento\Cms\Block\Block
     protected function _toHtml()
     {
         $html = '';
-        $html.= '<div class="contract-area" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc;">';
-        $html.= '"'.$this->getBlockContent().'"';
-        $html.= '</div>';
-        $html.= '<p><input type="checkbox" style="float:left" name="agree-contract"/>'.__('I read, and agree to the terms of the contract.').'</p>';
 
-        $signUrl = $this->getUrl('docupload/certificate/sign', ['_current' => true, '_use_rewrite' => true]);
-        $html.= '<button><a href="'.$signUrl.'"><span>'.__('Sign with Digital Certificate').'</span></a></button>';
+        if(!$this->getDefaultData()){
+            $addressNotFound = "<div><p>".__("To view/print the Contract Participation in Judicial Auction, Extrajudicial Auction and/or Direct Online Sale, it is necessary to register your legal address.")."</p>";
+            $addressNotFound.= "<h3>".__("<a href='%1'> Click here </a> to register your address.", $this->getUrl('customer/address/new'))."</h3>";
+            $addressNotFound.= "<p>".__("Then click on the CONTRACT link in the side menu to view and print your contract.")."</p></div>";
+            $html.= $addressNotFound;
+        } else {
+            $html.= '<div class="contract-area" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc;">';
+            $html.= $this->getBlockContent();
+            $html.= '</div>';
+            $html.= '<p><input type="checkbox" style="float:left" name="agree-contract"/>'.__('I read, and agree to the terms of the contract.').'</p>';
+
+            $signUrl = $this->getUrl('docupload/certificate/sign', ['_current' => true, '_use_rewrite' => true]);
+            $html.= '<button><a href="'.$signUrl.'"><span>'.__('Sign with Digital Certificate').'</span></a></button>';
+        }
         return $html;
     }
 
-    protected function getBlock($blockId)
-    {
-        $objectManager = ObjectManager::getInstance();
-        $block = $objectManager->get('\Techspot\DocumentUpload\Block\Contract');
-        $block->setBlockId('contrato-participacao-leilao');
-        return $block->toHtml();
-    }
 }
