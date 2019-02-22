@@ -8,25 +8,25 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Customer\Block\Account\SortLinkInterface" name="customer-account-navigation-document-link">
-                <arguments>
-                    <argument name="path" xsi:type="string">docupload/index/index</argument>
-                    <argument name="label" xsi:type="string" translate="true">My Documents</argument>
-                    <argument name="sortOrder" xsi:type="number">210</argument>
-                </arguments>
-            </block>
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="customer-account-navigation-contract-link">
                 <arguments>
                     <argument name="path" xsi:type="string">docupload/index/contract</argument>
                     <argument name="label" xsi:type="string" translate="true">My Contract</argument>
-                    <argument name="sortOrder" xsi:type="number">220</argument>
+                    <argument name="sortOrder" xsi:type="number">230</argument>
                 </arguments>
             </block>
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="customer-account-navigation-certificate-link">
                 <arguments>
                     <argument name="path" xsi:type="string">docupload/certificate/index</argument>
                     <argument name="label" xsi:type="string" translate="true">My Digital Certificate</argument>
-                    <argument name="sortOrder" xsi:type="number">230</argument>
+                    <argument name="sortOrder" xsi:type="number">220</argument>
+                </arguments>
+            </block>
+             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="customer-account-navigation-document-link">
+                <arguments>
+                    <argument name="path" xsi:type="string">docupload/index/index</argument>
+                    <argument name="label" xsi:type="string" translate="true">My Documents</argument>
+                    <argument name="sortOrder" xsi:type="number">210</argument>
                 </arguments>
             </block>
         </referenceBlock>
