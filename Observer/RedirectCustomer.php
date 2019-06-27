@@ -47,6 +47,11 @@ class RedirectCustomer implements ObserverInterface
     protected $_responseFactory;
 
     /**
+     * @var  \Techspot\DocumentUpload\Helper\Data
+     */
+    protected $_duHelper;
+
+    /**
      * [__construct ]
      *
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -60,33 +65,36 @@ class RedirectCustomer implements ObserverInterface
         \Zend\Validator\Uri $uri,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Framework\UrlInterface $urlInterface,
-        \Magento\Framework\App\ResponseFactory $responseFactory
+        \Magento\Framework\App\ResponseFactory $responseFactory,
+        \Techspot\DocumentUpload\Helper\Data $duHelper
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->uri = $uri;
         $this->_customerRepositoryInterface = $customerRepositoryInterface;
         $this->_urlInterface = $urlInterface;
         $this->_responseFactory = $responseFactory;
-
+        $this->_duHelper = $duHelper;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $customer = $observer->getEvent()->getCustomer();
-        
-        if($customer->getId()){
-            $customerLegalType = $customer->getData('legal_type');
+        if($this->_duHelper->isEnable() && $this->_duHelper->redirectAfterLogin()){
+            $customer = $observer->getEvent()->getCustomer();
+            
+            if($customer->getId()){
+                $customerLegalType = $customer->getData('legal_type');
 
-            $redirectPage = false;
-            if($customerLegalType === '1'){
-                $redirectPage = \Techspot\DocumentUpload\Controller\Index\Post::REDIRECT_PAGE_PF;
-            } else if($customerLegalType === '2'){
-                $redirectPage = \Techspot\DocumentUpload\Controller\Index\Post::REDIRECT_PAGE_PJ;
+                $redirectPage = false;
+                if($customerLegalType === '1'){
+                    $redirectPage = \Techspot\DocumentUpload\Controller\Index\Post::REDIRECT_PAGE_PF;
+                } else if($customerLegalType === '2'){
+                    $redirectPage = \Techspot\DocumentUpload\Controller\Index\Post::REDIRECT_PAGE_PJ;
+                }
+
+                $url = $this->_urlInterface->getUrl($redirectPage); 
+                $this->_responseFactory->create()->setRedirect($url)->sendResponse();
+                exit();
             }
-
-            $url = $this->_urlInterface->getUrl($redirectPage); 
-            $this->_responseFactory->create()->setRedirect($url)->sendResponse();
-            exit();
         }
     }
 }

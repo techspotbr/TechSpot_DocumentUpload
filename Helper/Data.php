@@ -2,10 +2,50 @@
  
 namespace Techspot\DocumentUpload\Helper;
 use \Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use \Techspot\Brcustomer\Model\Config\Source\Legaltype;
 class Data extends AbstractHelper
 {
-    protected function getFormattedName($unformattedName){
+    const DOCUPLOAD_CONFIG_ENABLE_PATH = 'documentupload/config/enable';
+    const DOCUPLOAD_CONFIG_REDIRECT_PATH = 'documentupload/config/redirect';
+
+
+    /**
+     * Check if module config is enable in admin
+     * 
+     * @param ScopeConfigInterface $scope
+     * 
+     * @return bool
+     */
+    public function isEnable($scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT)
+    {
+        $enable = $this->scopeConfig->getValue(self::DOCUPLOAD_CONFIG_ENABLE_PATH, $scope);
+
+        if($enable){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if can redirect do document upload page after login
+     * 
+     * @param ScopeConfigInterface $scope
+     * 
+     * @return bool
+     */
+    public function redirectAfterLogin($scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT)
+    {
+        $redirect = $this->scopeConfig->getValue(self::DOCUPLOAD_CONFIG_REDIRECT_PATH, $scope);
+
+        if($redirect){
+            return true;
+        }
+        return false;
+    }
+
+    protected function getFormattedName($unformattedName)
+    {
         $pos = strpos($unformattedName, ' ');
         $customerName = array();
         if($pos !== FALSE){
@@ -53,6 +93,5 @@ class Data extends AbstractHelper
 		else {
 			return false;
 		}
-
     }
 }
