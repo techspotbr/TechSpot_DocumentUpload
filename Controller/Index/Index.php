@@ -17,7 +17,6 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        var_dump($_SERVER);
         $this->_view->loadLayout();
         $this->_view->getLayout()->getBlock('docupload');
         $this->_view->renderLayout();

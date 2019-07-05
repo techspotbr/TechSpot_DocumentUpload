@@ -8,6 +8,8 @@ class Data extends AbstractHelper
 {
     const DOCUPLOAD_CONFIG_ENABLE_PATH = 'documentupload/config/enable';
     const DOCUPLOAD_CONFIG_REDIRECT_PATH = 'documentupload/config/redirect';
+    const DOCUPLOAD_CONFIG_ENABLE_LOGIN_CERTIFICATE = 'documentupload/config/enable_login_certificate';
+    const DOCUPLOAD_CONFIG_CMS_BLOCK_CONTRACT = 'documentupload/config/cms_block_contract';
 
 
     /**
@@ -28,6 +30,23 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Get cms block contract identifier
+     * 
+     * @param ScopeConfigInterface $scope
+     * 
+     * @return string | bool
+     */
+    public function getContractIdentifier($scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT)
+    {
+        $enable = $this->scopeConfig->getValue(self::DOCUPLOAD_CONFIG_CMS_BLOCK_CONTRACT, $scope);
+
+        if($enable){
+            return $enable;
+        }
+        return false;
+    }
+
+    /**
      * Check if can redirect do document upload page after login
      * 
      * @param ScopeConfigInterface $scope
@@ -39,6 +58,23 @@ class Data extends AbstractHelper
         $redirect = $this->scopeConfig->getValue(self::DOCUPLOAD_CONFIG_REDIRECT_PATH, $scope);
 
         if($redirect){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if can login with certificate
+     * 
+     * @param ScopeConfigInterface $scope
+     * 
+     * @return bool
+     */
+    public function canLoginWithCertificate($scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT)
+    {
+        $enableLoginCert = $this->scopeConfig->getValue(self::DOCUPLOAD_CONFIG_ENABLE_LOGIN_CERTIFICATE, $scope);
+
+        if($enableLoginCert){
             return true;
         }
         return false;

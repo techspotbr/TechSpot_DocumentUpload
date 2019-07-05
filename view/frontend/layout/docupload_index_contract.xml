@@ -29,7 +29,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Techspot\DocumentUpload\Block\Contract" name="contract"/>
+            <block class="Techspot\DocumentUpload\Block\Contract" name="contract" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

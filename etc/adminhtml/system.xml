@@ -39,6 +39,14 @@
                     <label>Redirect to Document Upload Page after Login</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="enable_login_certificate" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable Login with digital certificate</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show button (Login with certificate) in Customer Login Page</comment>
+                </field>
+                 <field id="cms_block_contract" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Cms Block Contract</label>
+                </field>
             </group>
         </section>
     </system>

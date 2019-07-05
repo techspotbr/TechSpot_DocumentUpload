@@ -15,7 +15,7 @@ use Magento\Framework\App\ObjectManager;
  */
 class Contract extends \Magento\Cms\Block\Block
 {
-    const CONTRACT_CMS_BLOCK_IDENTIFIER = 'contrato-participacao-leilao';
+    const CONTRACT_CMS_BLOCK_IDENTIFIER = 'contrato-adesao-one';
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -122,7 +122,7 @@ class Contract extends \Magento\Cms\Block\Block
                 }
                 
                 $this->_filter->initDefaultFilters();
-                $this->_filter->setVariables($this->getDefaultData());
+                //$this->_filter->setVariables($this->getDefaultData());
                 
                 $html = $this->_filter->setStoreId($this->getStoreId())->filter($block->getContent());
             }
@@ -147,7 +147,9 @@ class Contract extends \Magento\Cms\Block\Block
     protected function _toHtml()
     {
         $html = '';
-
+        $html.= $this->getBlockContent();
+        //$html.= $this->getBlockContent();
+        /*
         if(!$this->getDefaultData()){
             $addressNotFound = "<div><p>".__("To view/print the Contract Participation in Judicial Auction, Extrajudicial Auction and/or Direct Online Sale, it is necessary to register your legal address.")."</p>";
             $addressNotFound.= "<h3>".__("<a href='%1'> Click here </a> to register your address.", $this->getUrl('customer/address/new'))."</h3>";
@@ -161,7 +163,7 @@ class Contract extends \Magento\Cms\Block\Block
 
             $signUrl = $this->getUrl('docupload/certificate/sign', ['_current' => true, '_use_rewrite' => true]);
             $html.= '<button><a href="'.$signUrl.'"><span>'.__('Sign with Digital Certificate').'</span></a></button>';
-        }
+        }*/
         return $html;
     }
 

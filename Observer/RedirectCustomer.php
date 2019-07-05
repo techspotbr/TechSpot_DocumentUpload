@@ -91,9 +91,11 @@ class RedirectCustomer implements ObserverInterface
                     $redirectPage = \Techspot\DocumentUpload\Controller\Index\Post::REDIRECT_PAGE_PJ;
                 }
 
-                $url = $this->_urlInterface->getUrl($redirectPage); 
-                $this->_responseFactory->create()->setRedirect($url)->sendResponse();
-                exit();
+                if($redirectPage){
+                    $url = $this->_urlInterface->getUrl($redirectPage); 
+                    $this->_responseFactory->create()->setRedirect($url)->sendResponse();
+                    exit();
+                }
             }
         }
     }
