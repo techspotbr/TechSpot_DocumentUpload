@@ -7,6 +7,8 @@
 // @codingStandardsIgnoreFile
 
 /** @var \Magento\Customer\Block\Form\Login $block */
+
+$_helper  = $this->helper('Techspot\DocumentUpload\Helper\Data');
 ?>
 <div class="block block-customer-login">
     <div class="block-title">
@@ -39,12 +41,14 @@
                     <div class="secondary"><a class="action remind" href="<?= $block->escapeUrl($block->getForgotPasswordUrl()) ?>"><span><?= $block->escapeHtml(__('Forgot Your Password?')) ?></span></a></div>
                 </div>
             </fieldset>
+            <?php if($_helper->canLoginWithCertificate()): ?>
             <fieldset class="fieldset login-certificate">
                 <div class="field note"><?= $block->escapeHtml(__('Or use your Digital Certificate to access your account:')) ?></div>
                 <div class="actions-toolbar">
                     <div class="primary"><button class="action login primary"><a href="<?= $block->getUrl('docupload/index/certificate', ['_current' => true, '_use_rewrite' => true]) ?>"><i class="fa fa-id-card"></i><span><?= __('Login with Digital Certificate')?></span></a></button></div>
                 </div>
             </fieldset>
+            <?php endif; ?>
         </form>
     </div>
 </div>
